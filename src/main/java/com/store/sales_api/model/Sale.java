@@ -1,0 +1,56 @@
+package com.store.sales_api.model;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Entity
+@Getter @Setter
+public class Sale {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String code;
+    private LocalDate date;
+    private BigDecimal totalAmount;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @OneToMany(mappedBy = "sale")
+    private List<Detail> details;
+
+
+
+    public Sale() {
+    }
+
+
+    public Sale(String code, LocalDate date, BigDecimal totalAmount, Client client) {
+        this.code = code;
+        this.date = date;
+        this.totalAmount = totalAmount;
+        this.client = client;
+    }
+
+
+    public void addDetail(Detail detail) {
+        this.details.add(detail);
+        detail.setSale(this);
+    }
+
+}
