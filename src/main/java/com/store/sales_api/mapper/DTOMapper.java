@@ -1,0 +1,68 @@
+package com.store.sales_api.mapper;
+
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import com.store.sales_api.dto.ClientResponseDTO;
+import com.store.sales_api.dto.DetailResponseDTO;
+import com.store.sales_api.dto.ProductResponseDTO;
+import com.store.sales_api.dto.SaleResponseDTO;
+import com.store.sales_api.model.Client;
+import com.store.sales_api.model.Detail;
+import com.store.sales_api.model.Product;
+import com.store.sales_api.model.Sale;
+
+
+@Component
+public class DTOMapper {
+    
+    public DTOMapper(){
+
+    }
+
+    public ProductResponseDTO productToDTO(Product product){
+        return new ProductResponseDTO(
+        product.getId(),
+        product.getCode(),
+        product.getName(),
+        product.getBrand(),
+        product.getPrice(),
+        product.getStock()
+    );
+    }
+
+
+    public ClientResponseDTO clientToDTO(Client client) {
+        return new ClientResponseDTO(
+            client.getId(),
+            client.getName(),
+            client.getLastName(),
+            client.getDni()
+        );
+    }
+
+
+    public DetailResponseDTO detailToDTO(Detail detail) {
+        return new DetailResponseDTO(
+            detail.getId(),
+            detail.getSale().getId(),
+            detail.getProduct().getId(),
+            detail.getQuantity(),
+            detail.getPartialAmount()
+        );
+    }
+
+    public SaleResponseDTO saleToDTO(Sale sale) {
+        List<DetailResponseDTO> details = sale.getDetails().stream().map(detail -> detailToDTO(detail)).toList();
+
+        return new SaleResponseDTO(
+            sale.getId(),
+            sale.getCode(),
+            sale.getDate(),
+            sale.getTotalAmount(),
+            sale.getClient().getId(),
+            details
+        );
+    }
+}
