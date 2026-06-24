@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,8 @@ import lombok.Setter;
 
 
 @Entity
+@SQLDelete(sql = "UPDATE sales SET is_active=false WHERE id=?")
+@SQLRestriction("is_active=true")
 @Getter @Setter
 public class Sale {
     
@@ -27,7 +32,7 @@ public class Sale {
     private String code;
     private LocalDate date;
     private BigDecimal totalAmount = new BigDecimal(0.00);
-    private Boolean is_active = true;
+    private Boolean isActive = true;
 
 
     @ManyToOne

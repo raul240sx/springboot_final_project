@@ -2,6 +2,8 @@ package com.store.sales_api.model;
 
 import java.math.BigDecimal;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +11,9 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
+@SQLDelete(sql = "UPDATE sales SET is_active=false WHERE id=?")
 @Getter @Setter
 public class Product {
 

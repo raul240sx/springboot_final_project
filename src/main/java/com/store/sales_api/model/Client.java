@@ -3,6 +3,9 @@ package com.store.sales_api.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +16,8 @@ import lombok.Setter;
 
 
 @Entity
+@SQLDelete(sql = "UPDATE sales SET is_active=false WHERE id=?")
+@SQLRestriction("is_active=true")
 @Getter @Setter
 public class Client {
 
