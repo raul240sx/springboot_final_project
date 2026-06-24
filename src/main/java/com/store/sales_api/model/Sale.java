@@ -8,6 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,7 +40,7 @@ public class Sale {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    @OneToMany(mappedBy = "sale")
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Detail> details = new ArrayList<>();
 
 
