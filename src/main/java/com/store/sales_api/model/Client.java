@@ -1,5 +1,6 @@
 package com.store.sales_api.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -22,9 +23,10 @@ public class Client {
     private String name;
     private String lastName;
     private String dni;
+    private Boolean isActive = true;
 
     @OneToMany (mappedBy = "client")
-    private List<Sale> purchases;
+    private List<Sale> purchases = new ArrayList<>();
 
 
 

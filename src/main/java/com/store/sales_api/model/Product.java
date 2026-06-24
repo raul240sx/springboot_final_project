@@ -20,9 +20,9 @@ public class Product {
     private String code;
     private String name;
     private String brand;
-    private BigDecimal price;
-    private Integer stock;
-    
+    private BigDecimal price = new BigDecimal(0.00);
+    private Integer stock = 0;
+    private Boolean isActive = true;    
     
     
     public Product() {

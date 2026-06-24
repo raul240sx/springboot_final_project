@@ -28,8 +28,8 @@ public class Detail {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private Integer quantity;
-    private BigDecimal partialAmount;
+    private Integer quantity = 1;
+    private BigDecimal partialAmount = new BigDecimal(0.00);
 
     
     

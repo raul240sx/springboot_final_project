@@ -2,6 +2,7 @@ package com.store.sales_api.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -25,14 +26,16 @@ public class Sale {
 
     private String code;
     private LocalDate date;
-    private BigDecimal totalAmount;
+    private BigDecimal totalAmount = new BigDecimal(0.00);
+    private Boolean is_active = true;
+
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @OneToMany(mappedBy = "sale")
-    private List<Detail> details;
+    private List<Detail> details = new ArrayList<>();
 
 
 
