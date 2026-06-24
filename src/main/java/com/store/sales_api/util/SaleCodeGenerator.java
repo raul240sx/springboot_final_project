@@ -8,21 +8,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SaleCodeGenerator {
-    private static final String BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private final Base62Encoder encoder;
+
+    public SaleCodeGenerator(Base62Encoder encoder) {
+        this.encoder = encoder;
+    }
+
 
     public String generateSaleCode(LocalDate date, Long saleId) {
-        StringBuilder encodedId = new StringBuilder();
-        while (saleId > 0) {
-            int remainder = (int) (saleId % 62);
-            encodedId.append(BASE62_CHARS.charAt(remainder));
-            saleId = saleId / 62;
-        }
 
+        String encodedId = encoder.generateCode(saleId);
         
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
         String stringDate = date.format(dateFormatter);
-        String encodedIdZero = "0".repeat(Math.max(0, 4 - String.valueOf(encodedId).length())) + encodedId.reverse();
+        String encodedIdZero = "0".repeat(Math.max(0, 4 - encodedId.length())) + encodedId;
 
         return stringDate + encodedIdZero;
     }

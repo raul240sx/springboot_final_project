@@ -2,7 +2,6 @@ package com.store.sales_api.service;
 
 import java.util.List;
 
-import com.store.sales_api.dto.DetailRequestDTO;
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
 
