@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record SaleResponseDTO(
-    Long id,
     String code,
     LocalDate date,
     BigDecimal totalAmount,

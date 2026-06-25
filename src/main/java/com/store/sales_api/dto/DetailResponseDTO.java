@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 
 public record DetailResponseDTO(
-    Long saleId,
     Long productId,
     Integer quantity,
     BigDecimal partialAmount

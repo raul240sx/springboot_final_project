@@ -39,7 +39,7 @@ public class DTOMapper {
         if (client == null) return null;
 
         return new ClientResponseDTO(
-            client.getId(),
+            client.getCode(),
             client.getName(),
             client.getLastName(),
             client.getDni()
@@ -51,7 +51,6 @@ public class DTOMapper {
         if (detail == null) return null;
 
         return new DetailResponseDTO(
-            detail.getSale().getId(),
             detail.getProduct().getId(),
             detail.getQuantity(),
             detail.getPartialAmount()
@@ -64,7 +63,6 @@ public class DTOMapper {
         List<DetailResponseDTO> details = sale.getDetails().stream().map(detail -> detailToDTO(detail)).toList();
 
         return new SaleResponseDTO(
-            sale.getId(),
             sale.getCode(),
             sale.getDate(),
             sale.getTotalAmount(),
