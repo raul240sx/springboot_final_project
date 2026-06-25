@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 
 public record DetailResponseDTO(
-    Long productId,
+    String productCode,
     Integer quantity,
     BigDecimal partialAmount
 ) {

@@ -50,7 +50,7 @@ public class DTOMapper {
         if (detail == null) return null;
 
         return new DetailResponseDTO(
-            detail.getProduct().getId(),
+            detail.getProduct().getCode(),
             detail.getQuantity(),
             detail.getPartialAmount()
         );
