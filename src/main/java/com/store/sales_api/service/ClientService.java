@@ -11,6 +11,7 @@ import com.store.sales_api.exception.ResourceNotFoundException;
 import com.store.sales_api.mapper.DTOMapper;
 import com.store.sales_api.model.Client;
 import com.store.sales_api.repository.IClientRepository;
+import com.store.sales_api.util.ClientCodeGenerator;
 
 
 @Service
@@ -18,10 +19,12 @@ import com.store.sales_api.repository.IClientRepository;
 public class ClientService implements IClientService{
     private final IClientRepository clientRepository;
     private final DTOMapper dtoMapper;
+    private final ClientCodeGenerator codeGenerator;
 
-    public ClientService(IClientRepository clientRepository, DTOMapper dtoMapper) {
+    public ClientService(IClientRepository clientRepository, DTOMapper dtoMapper, ClientCodeGenerator codeGenerator) {
         this.clientRepository = clientRepository;
         this.dtoMapper = dtoMapper;
+        this.codeGenerator = codeGenerator;
     }
 
 
@@ -43,6 +46,8 @@ public class ClientService implements IClientService{
         Client newClient = new Client(clientDTO.name(), clientDTO.lastName(), clientDTO.dni());
 
         Client createdClient = clientRepository.save(newClient);
+        
+        createdClient.setCode(codeGenerator.generateSaleCode(createdClient.getId()));
 
         return dtoMapper.clientToDTO(createdClient);
     }
