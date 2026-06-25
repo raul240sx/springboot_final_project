@@ -17,4 +17,6 @@ public interface IProductService {
     ProductResponseDTO updateProduct(String productCode, ProductRequestDTO productDTO);
 
     void deleteProduct(String productCode);
+
+    List<ProductResponseDTO> findLowStockProducts(Integer lessThanStock);
 }
