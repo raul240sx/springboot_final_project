@@ -21,7 +21,7 @@ import lombok.Setter;
 
 
 @Entity
-@SQLDelete(sql = "UPDATE sales SET is_active=false WHERE id=?")
+@SQLDelete(sql = "UPDATE sale SET is_active=false WHERE id=?")
 @SQLRestriction("is_active=true")
 @Getter @Setter
 public class Sale {
