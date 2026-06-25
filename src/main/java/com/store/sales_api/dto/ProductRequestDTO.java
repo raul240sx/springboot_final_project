@@ -20,7 +20,7 @@ public record ProductRequestDTO(
     @NotBlank(message = "{product.brand.null}")
     String brand,
 
-    @NotBlank(message = "{product.category.null}")
+    @NotNull(message = "{product.category.null}")
     ProductCategory category,
 
     @NotNull(message = "{product.price.null}")
