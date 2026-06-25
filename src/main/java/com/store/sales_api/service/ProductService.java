@@ -11,6 +11,7 @@ import com.store.sales_api.exception.ResourceNotFoundException;
 import com.store.sales_api.mapper.DTOMapper;
 import com.store.sales_api.model.Product;
 import com.store.sales_api.repository.IProductRepository;
+import com.store.sales_api.util.ProductCodeGenerator;
 
 
 @Service
@@ -18,11 +19,13 @@ import com.store.sales_api.repository.IProductRepository;
 public class ProductService implements IProductService{
     private final IProductRepository productRepository;
     private final DTOMapper dtoMapper;
+    private final ProductCodeGenerator codeGenerator;
 
 
-    public ProductService(IProductRepository productRepository, DTOMapper dtoMapper) {
+    public ProductService(IProductRepository productRepository, DTOMapper dtoMapper, ProductCodeGenerator codeGenerator) {
         this.productRepository = productRepository;
         this.dtoMapper = dtoMapper;
+        this.codeGenerator = codeGenerator;
     }
 
 
@@ -42,9 +45,11 @@ public class ProductService implements IProductService{
     @Override
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productDTO) {
-        Product newProduct = new Product(productDTO.name(), productDTO.brand(), productDTO.price(), productDTO.stock());
+        Product newProduct = new Product(productDTO.name(), productDTO.brand(), productDTO.category(), productDTO.price(), productDTO.stock());
 
         Product createdProduct = productRepository.save(newProduct);
+
+        createdProduct.setCode(codeGenerator.generateProductCode(createdProduct));
 
         return dtoMapper.productToDTO(createdProduct);
     }
@@ -59,7 +64,10 @@ public class ProductService implements IProductService{
         productToEdit.setPrice(productDTO.price());
         productToEdit.setStock(productDTO.stock());
 
-        productRepository.save(productToEdit);
+        if (productToEdit.getCategory() != productDTO.category()) {
+            productToEdit.setCategory(productDTO.category());
+            productToEdit.setCode(codeGenerator.generateProductCode(productToEdit));
+        }
 
         return dtoMapper.productToDTO(productToEdit);
 
