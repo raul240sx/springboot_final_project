@@ -31,8 +31,8 @@ public class ClientService implements IClientService{
     }
 
     @Override
-    public ClientResponseDTO getClient(Long clientId) {
-        Client client = clientRepository.findById(clientId).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado no existe"));
+    public ClientResponseDTO getClient(String clientCode) {
+        Client client = clientRepository.findByCode(clientCode).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado no existe"));
 
         return dtoMapper.clientToDTO(client);
     }
@@ -49,8 +49,8 @@ public class ClientService implements IClientService{
 
     @Override
     @Transactional
-    public ClientResponseDTO updateClient(Long clientId, ClientRequestDTO clientDTO) {
-        Client clientToUpdate = clientRepository.findById(clientId).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado para editar no existe"));
+    public ClientResponseDTO updateClient(String clientCode, ClientRequestDTO clientDTO) {
+        Client clientToUpdate = clientRepository.findByCode(clientCode).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado para editar no existe"));
 
         clientToUpdate.setName(clientDTO.name());
         clientToUpdate.setLastName(clientDTO.lastName());
@@ -63,8 +63,8 @@ public class ClientService implements IClientService{
 
     @Override
     @Transactional
-    public void deleteClient(Long clientId) {
-        Client clientToDelete = clientRepository.findById(clientId).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado para eliminar no existe"));
+    public void deleteClient(String clientCode) {
+        Client clientToDelete = clientRepository.findByCode(clientCode).orElseThrow(() -> new ResourceNotFoundException("El cliente buscado para eliminar no existe"));
 
         clientRepository.delete(clientToDelete);
     }
