@@ -10,6 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import tools.jackson.databind.exc.InvalidFormatException;
+
+
+
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,8 +47,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ProblemDetail handleUnreadableMessage(HttpMessageNotReadableException ex) {
-        ProblemDetail apiError = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Mensaje JSON mal formateado");
+        Throwable cause = ex.getCause();
+
+        ProblemDetail apiError;
+
+        if (cause instanceof InvalidFormatException) {
+            InvalidFormatException invalidEx = (InvalidFormatException) cause;
+            String errorField = invalidEx.getPath().get(0).getPropertyName();
+            apiError = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "El valor enviado para el campo " + errorField + " no es válido");
+        }
+        else {
+            apiError = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Mensaje JSON mal formateado");
+        }
         apiError.setTitle("Malformed Request Json");
+
         return apiError;
     }
 
