@@ -58,4 +58,9 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/low-stock/{lessThanStock}")
+    public ResponseEntity<List<ProductResponseDTO>> findLowStockProducts(@PathVariable Integer lessThanStock) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findLowStockProducts(lessThanStock));
+    }
+
 }
