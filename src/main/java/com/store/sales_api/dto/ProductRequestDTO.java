@@ -2,6 +2,8 @@ package com.store.sales_api.dto;
 
 import java.math.BigDecimal;
 
+import com.store.sales_api.model.ProductCategory;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +19,9 @@ public record ProductRequestDTO(
 
     @NotBlank(message = "{product.brand.null}")
     String brand,
+
+    @NotBlank(message = "{product.category.null}")
+    ProductCategory category,
 
     @NotNull(message = "{product.price.null}")
     @DecimalMin(value = "0.00", message = "{product.price.min.value.error}")
