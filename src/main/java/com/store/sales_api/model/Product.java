@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import org.hibernate.annotations.SQLDelete;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +15,7 @@ import lombok.Setter;
 
 
 @Entity
-@SQLDelete(sql = "UPDATE sales SET is_active=false WHERE id=?")
+@SQLDelete(sql = "UPDATE product SET is_active=false WHERE id=?")
 @Getter @Setter
 public class Product {
 
@@ -24,6 +26,9 @@ public class Product {
     private String code;
     private String name;
     private String brand;
+
+    @Enumerated(EnumType.STRING)
+    private ProductCategory category;
     private BigDecimal price = new BigDecimal(0.00);
     private Integer stock = 0;
     private Boolean isActive = true;    
@@ -32,9 +37,10 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String brand, BigDecimal price, Integer stock) {
+    public Product(String name, String brand, ProductCategory category, BigDecimal price, Integer stock) {
         this.name = name;
         this.brand = brand;
+        this.category = category;
         this.price = price;
         this.stock = stock;
     }
