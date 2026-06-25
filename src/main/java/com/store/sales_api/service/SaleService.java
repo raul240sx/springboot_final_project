@@ -62,17 +62,17 @@ public class SaleService implements ISaleService{
     public SaleResponseDTO createSale(SaleRequestDTO saleDTO) {
         //Busqueda del cliente y productos requeridos
         Client client = clientRepository.findByCode(saleDTO.clientCode()).orElseThrow(() -> new ResourceNotFoundException("El cliente seleccionado para la venta no existe"));
-        List<Long> idProducts = saleDTO.details().stream().map(detailDTO -> detailDTO.productId()).toList();
-        List<Product> products = productRepository.findAllById(idProducts);
-        Map<Long, Product> productsMap = products.stream().collect(Collectors.toMap(product -> product.getId(), product -> product));
+        List<String> productCodes = saleDTO.details().stream().map(detailDTO -> detailDTO.productCode()).toList();
+        List<Product> products = productRepository.findAllByCodeIn(productCodes);
+        Map<String, Product> productsMap = products.stream().collect(Collectors.toMap(product -> product.getCode(), product -> product));
 
         //Validación de productos y stock
         for (DetailRequestDTO detail : saleDTO.details()) {
-            if (productsMap.get(detail.productId()) == null) {
-                throw new ResourceNotFoundException("El producto con id " + detail.productId() + " no existe en los registros");
+            if (productsMap.get(detail.productCode()) == null) {
+                throw new ResourceNotFoundException("El producto con código " + detail.productCode() + " no existe en los registros");
             }
-            if (detail.quantity() > productsMap.get(detail.productId()).getStock()) {
-                throw new BusinessRuleException("La cantidad deseada del producto " + detail.productId() + " supera el stock. Maximo " + productsMap.get(detail.productId()).getStock() +" productos");
+            if (detail.quantity() > productsMap.get(detail.productCode()).getStock()) {
+                throw new BusinessRuleException("La cantidad deseada del producto " + detail.productCode() + " supera el stock. Maximo " + productsMap.get(detail.productCode()).getStock() +" productos");
             }
         }
 
@@ -85,7 +85,7 @@ public class SaleService implements ISaleService{
         for (DetailRequestDTO detailDTO : saleDTO.details()) {
 
             Detail newDetail = new Detail();
-            Product selectedProduct = productsMap.get(detailDTO.productId());
+            Product selectedProduct = productsMap.get(detailDTO.productCode());
             newDetail.setProduct(selectedProduct);
             newDetail.setQuantity(detailDTO.quantity());
             newDetail.setPartialAmount(selectedProduct.getPrice().multiply(BigDecimal.valueOf(detailDTO.quantity())));
@@ -129,18 +129,18 @@ public class SaleService implements ISaleService{
         }
 
         //Busqueda de los productos en el nuevo detalle de compra
-        List<Long> idProductsEdit = saleDTO.details().stream().map(detail -> detail.productId()).toList();
-        List<Product> foundProducts = productRepository.findAllById(idProductsEdit);
-        Map<Long, Product> productsMap = foundProducts.stream().collect(Collectors.toMap(product -> product.getId(), product -> product));
+        List<String> productCodesEdit = saleDTO.details().stream().map(detail -> detail.productCode()).toList();
+        List<Product> foundProducts = productRepository.findAllByCodeIn(productCodesEdit);
+        Map<String, Product> productsMap = foundProducts.stream().collect(Collectors.toMap(product -> product.getCode(), product -> product));
         
         //Validación de existencia de productos y de stock
         for (DetailRequestDTO detail : saleDTO.details()) {
-            Product selectedProduct = productsMap.get(detail.productId());
+            Product selectedProduct = productsMap.get(detail.productCode());
             if (selectedProduct == null) {
-                throw new ResourceNotFoundException("El producto con id " + detail.productId() + " no existe en los registros");
+                throw new ResourceNotFoundException("El producto con código " + detail.productCode() + " no existe en los registros");
             }
             if (detail.quantity() > selectedProduct.getStock()) {
-                throw new BusinessRuleException("La cantidad deseada del producto " + detail.productId() + " supera el stock. Maximo " + selectedProduct.getStock() +" productos");
+                throw new BusinessRuleException("La cantidad deseada del producto " + detail.productCode() + " supera el stock. Maximo " + selectedProduct.getStock() +" productos");
             }
         }
 
@@ -148,7 +148,7 @@ public class SaleService implements ISaleService{
         BigDecimal totalAmount = new BigDecimal(0);
         for (DetailRequestDTO detail : saleDTO.details()) {
 
-            Product selectedProduct = productsMap.get(detail.productId());
+            Product selectedProduct = productsMap.get(detail.productCode());
             Detail newDetail = new Detail();
             newDetail.setProduct(selectedProduct);
             newDetail.setSale(saleToUpdate);
