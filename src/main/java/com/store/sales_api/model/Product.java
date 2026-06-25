@@ -32,8 +32,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String code, String name, String brand, BigDecimal price, Integer stock) {
-        this.code = code;
+    public Product(String name, String brand, BigDecimal price, Integer stock) {
         this.name = name;
         this.brand = brand;
         this.price = price;
