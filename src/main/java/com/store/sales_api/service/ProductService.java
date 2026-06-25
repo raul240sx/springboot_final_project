@@ -33,8 +33,8 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public ProductResponseDTO getProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("El producto buscado no existe"));
+    public ProductResponseDTO getProduct(String productCode) {
+        Product product = productRepository.findByCode(productCode).orElseThrow(() -> new ResourceNotFoundException("El producto buscado no existe"));
 
         return dtoMapper.productToDTO(product);
     }                                                                                  
@@ -42,7 +42,7 @@ public class ProductService implements IProductService{
     @Override
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO productDTO) {
-        Product newProduct = new Product(productDTO.code(), productDTO.name(), productDTO.brand(), productDTO.price(), productDTO.stock());
+        Product newProduct = new Product(productDTO.name(), productDTO.brand(), productDTO.price(), productDTO.stock());
 
         Product createdProduct = productRepository.save(newProduct);
 
@@ -51,10 +51,9 @@ public class ProductService implements IProductService{
 
     @Override
     @Transactional
-    public ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productDTO) {
-        Product productToEdit = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("El producto seleccionado para editar no existe"));
+    public ProductResponseDTO updateProduct(String productCode, ProductRequestDTO productDTO) {
+        Product productToEdit = productRepository.findByCode(productCode).orElseThrow(() -> new ResourceNotFoundException("El producto seleccionado para editar no existe"));
 
-        productToEdit.setCode(productDTO.code());
         productToEdit.setName(productDTO.name());
         productToEdit.setBrand(productDTO.brand());
         productToEdit.setPrice(productDTO.price());
@@ -68,8 +67,8 @@ public class ProductService implements IProductService{
 
     @Override
     @Transactional
-    public void deleteProduct(Long productId) {
-        Product productToDelete = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("El producto seleccionado para eliminar no existe"));
+    public void deleteProduct(String productCode) {
+        Product productToDelete = productRepository.findByCode(productCode).orElseThrow(() -> new ResourceNotFoundException("El producto seleccionado para eliminar no existe"));
 
         productRepository.delete(productToDelete);
     }

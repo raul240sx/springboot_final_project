@@ -10,11 +10,11 @@ public interface IProductService {
 
     List<ProductResponseDTO> getProducts();
 
-    ProductResponseDTO getProduct(Long productId);
+    ProductResponseDTO getProduct(String productCode);
 
     ProductResponseDTO createProduct(ProductRequestDTO productDTO);
 
-    ProductResponseDTO updateProduct(Long productId, ProductRequestDTO productDTO);
+    ProductResponseDTO updateProduct(String productCode, ProductRequestDTO productDTO);
 
-    void deleteProduct(Long productId);
+    void deleteProduct(String productCode);
 }
