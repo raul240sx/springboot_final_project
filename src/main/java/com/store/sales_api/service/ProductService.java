@@ -81,4 +81,13 @@ public class ProductService implements IProductService{
         productRepository.delete(productToDelete);
     }
 
+
+
+    @Override
+    public List<ProductResponseDTO> findLowStockProducts(Integer lessThanStock) {
+        List<Product> lowStockProducts = productRepository.findByStockLessThan(lessThanStock);
+
+        return lowStockProducts.stream().map(product -> dtoMapper.productToDTO(product)).toList();
+    }
+
 }
