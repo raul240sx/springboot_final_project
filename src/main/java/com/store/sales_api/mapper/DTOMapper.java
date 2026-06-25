@@ -25,7 +25,6 @@ public class DTOMapper {
         if (product == null) return null;
 
         return new ProductResponseDTO(
-        product.getId(),
         product.getCode(),
         product.getName(),
         product.getBrand(),

@@ -11,8 +11,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 public record ProductRequestDTO(
 
-    @NotBlank(message = "{product.code.null}")
-    String code,
     
     @NotBlank(message = "{product.name.null}")
     String name,
