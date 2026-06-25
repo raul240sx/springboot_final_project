@@ -61,7 +61,7 @@ public class SaleService implements ISaleService{
     @Transactional
     public SaleResponseDTO createSale(SaleRequestDTO saleDTO) {
         //Busqueda del cliente y productos requeridos
-        Client client = clientRepository.findById(saleDTO.clientId()).orElseThrow(() -> new ResourceNotFoundException("El cliente seleccionado para la venta no existe"));
+        Client client = clientRepository.findByCode(saleDTO.clientCode()).orElseThrow(() -> new ResourceNotFoundException("El cliente seleccionado para la venta no existe"));
         List<Long> idProducts = saleDTO.details().stream().map(detailDTO -> detailDTO.productId()).toList();
         List<Product> products = productRepository.findAllById(idProducts);
         Map<Long, Product> productsMap = products.stream().collect(Collectors.toMap(product -> product.getId(), product -> product));
@@ -110,7 +110,7 @@ public class SaleService implements ISaleService{
     public SaleResponseDTO updateSale(String saleCode, SaleRequestDTO saleDTO) {
         //Busqueda de la venta a editar y del cliente
         Sale saleToUpdate = saleRepository.findByCode(saleCode).orElseThrow(() -> new ResourceNotFoundException("La venta a editar no existe"));
-        Client clientToUpdate = clientRepository.findById(saleDTO.clientId()).orElseThrow(() -> new ResourceNotFoundException("El cliente seleccionado para la venta no existe"));
+        Client clientToUpdate = clientRepository.findByCode(saleDTO.clientCode()).orElseThrow(() -> new ResourceNotFoundException("El cliente seleccionado para la venta no existe"));
 
         //Volver los productos al estado anterior a la venta
         saleToUpdate.getDetails().stream().map(detail -> {
