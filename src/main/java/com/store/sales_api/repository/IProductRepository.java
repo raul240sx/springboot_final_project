@@ -14,4 +14,6 @@ public interface IProductRepository extends JpaRepository<Product, Long>{
 
     List<Product> findAllByCodeIn(List<String> codes);
 
+    List<Product> findByStockLessThan(Integer stock);
+
 }
