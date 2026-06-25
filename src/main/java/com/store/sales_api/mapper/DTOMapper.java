@@ -28,6 +28,7 @@ public class DTOMapper {
         product.getCode(),
         product.getName(),
         product.getBrand(),
+        product.getCategory().toString(),
         product.getPrice(),
         product.getStock()
     );
