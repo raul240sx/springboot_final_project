@@ -50,7 +50,7 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> updateProduct(
         @PathVariable String productCode,
         @Valid @RequestBody ProductRequestDTO productDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(null, productDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(productCode, productDTO));
     }
 
     @DeleteMapping("/{productCode}")
