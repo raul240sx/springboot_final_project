@@ -3,6 +3,7 @@ package com.store.sales_api.model;
 import java.math.BigDecimal;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +17,7 @@ import lombok.Setter;
 
 @Entity
 @SQLDelete(sql = "UPDATE product SET is_active=false WHERE id=?")
+@SQLRestriction("is_active = true")
 @Getter @Setter
 public class Product {
 
