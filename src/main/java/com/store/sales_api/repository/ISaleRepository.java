@@ -20,4 +20,6 @@ public interface ISaleRepository extends JpaRepository<Sale, Long>{
 
     @Query("SELECT SUM(s.totalAmount) FROM Sale s WHERE s.date = :date")
     BigDecimal getDayTotalAmount(@Param("date") LocalDate date);
+
+    Optional<Sale> findTopByOrderByTotalAmountDesc();
 }
