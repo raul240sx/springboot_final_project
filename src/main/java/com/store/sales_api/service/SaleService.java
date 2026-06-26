@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.store.sales_api.dto.DetailRequestDTO;
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
+import com.store.sales_api.dto.SaleSumCountDTO;
 import com.store.sales_api.exception.BusinessRuleException;
 import com.store.sales_api.exception.ResourceNotFoundException;
 import com.store.sales_api.mapper.DTOMapper;
@@ -177,6 +178,17 @@ public class SaleService implements ISaleService{
         }
 
         saleRepository.delete(saleToDelete);
+    }
+
+
+
+    @Override
+    public SaleSumCountDTO getDaySaleSumCount(LocalDate date) {
+        Integer salesCount = saleRepository.getDaySalesCount(date);
+
+        BigDecimal dayTotalAmount = saleRepository.getDayTotalAmount(date);
+
+        return dtoMapper.saleSumCounToDTO(date, salesCount, dayTotalAmount);
     }
 
 }
