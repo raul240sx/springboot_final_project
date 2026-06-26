@@ -1,9 +1,11 @@
 package com.store.sales_api.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
+import com.store.sales_api.dto.SaleSumCountDTO;
 
 public interface ISaleService {
 
@@ -16,4 +18,6 @@ public interface ISaleService {
     SaleResponseDTO updateSale(String saleCode, SaleRequestDTO saleDTO);
 
     void deleteSale(String saleCode);
+
+    SaleSumCountDTO getDaySaleSumCount(LocalDate date);
 }
