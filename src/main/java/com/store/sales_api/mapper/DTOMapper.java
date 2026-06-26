@@ -1,5 +1,7 @@
 package com.store.sales_api.mapper;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import com.store.sales_api.dto.ClientResponseDTO;
 import com.store.sales_api.dto.DetailResponseDTO;
 import com.store.sales_api.dto.ProductResponseDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
+import com.store.sales_api.dto.SaleSumCountDTO;
 import com.store.sales_api.model.Client;
 import com.store.sales_api.model.Detail;
 import com.store.sales_api.model.Product;
@@ -69,5 +72,11 @@ public class DTOMapper {
             sale.getClient().getId(),
             details
         );
+    }
+
+    public SaleSumCountDTO saleSumCounToDTO(LocalDate date, Integer salesCount, BigDecimal dayTotalAmount) {
+        if (date == null || salesCount == null || dayTotalAmount == null) return null;
+
+        return new SaleSumCountDTO(date, salesCount, dayTotalAmount);
     }
 }
