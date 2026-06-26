@@ -8,7 +8,7 @@ public record SaleResponseDTO(
     String code,
     LocalDate date,
     BigDecimal totalAmount,
-    Long client_id,
+    String clientCode,
     List<DetailResponseDTO> details
 ) {
 
