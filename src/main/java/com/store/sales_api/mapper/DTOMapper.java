@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.store.sales_api.dto.ClientResponseDTO;
 import com.store.sales_api.dto.DetailResponseDTO;
 import com.store.sales_api.dto.ProductResponseDTO;
+import com.store.sales_api.dto.SaleMajorAmountDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
 import com.store.sales_api.dto.SaleSumCountDTO;
 import com.store.sales_api.model.Client;
@@ -69,7 +70,7 @@ public class DTOMapper {
             sale.getCode(),
             sale.getDate(),
             sale.getTotalAmount(),
-            sale.getClient().getId(),
+            sale.getClient().getCode(),
             details
         );
     }
@@ -78,5 +79,18 @@ public class DTOMapper {
         if (date == null || salesCount == null || dayTotalAmount == null) return null;
 
         return new SaleSumCountDTO(date, salesCount, dayTotalAmount);
+    }
+
+    public SaleMajorAmountDTO saleMajorAmountToDTO(Sale sale,Integer productQuantity) {
+        if (sale == null) return null;
+
+        return new SaleMajorAmountDTO(
+            sale.getCode(),
+            sale.getTotalAmount(),
+            productQuantity,
+            sale.getClient().getName(),
+            sale.getClient().getLastName(),
+            sale.getClient().getCode()
+        )
     }
 }
