@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.store.sales_api.dto.ProductCategoryDTO;
 import com.store.sales_api.dto.ProductRequestDTO;
 import com.store.sales_api.dto.ProductResponseDTO;
 import com.store.sales_api.service.IProductService;
@@ -61,6 +62,11 @@ public class ProductController {
     @GetMapping("/low-stock/{lessThanStock}")
     public ResponseEntity<List<ProductResponseDTO>> findLowStockProducts(@PathVariable Integer lessThanStock) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findLowStockProducts(lessThanStock));
+    }
+
+    @GetMapping("/get-categories")
+    public ResponseEntity<List<ProductCategoryDTO>> getCategoryProducts() {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getCategoryProducts());
     }
 
 }
