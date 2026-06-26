@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.store.sales_api.dto.DetailRequestDTO;
+import com.store.sales_api.dto.SaleMajorAmountDTO;
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
 import com.store.sales_api.dto.SaleSumCountDTO;
@@ -190,5 +191,21 @@ public class SaleService implements ISaleService{
 
         return dtoMapper.saleSumCounToDTO(date, salesCount, dayTotalAmount);
     }
+
+
+
+    @Override
+    public SaleMajorAmountDTO getBestSale() {
+        Sale sale = saleRepository.findTopByOrderByTotalAmountDesc().orElseThrow(() -> new ResourceNotFoundException("No existe registros para mostrar"));
+
+        Integer productQuantity = 0;
+
+        for (Detail detail : sale.getDetails()) {
+            productQuantity += detail.getQuantity();
+        }
+
+        return dtoMapper.saleMajorAmountToDTO(sale, productQuantity);
+    }
+    
 
 }
