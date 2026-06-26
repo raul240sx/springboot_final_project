@@ -91,6 +91,6 @@ public class DTOMapper {
             sale.getClient().getName(),
             sale.getClient().getLastName(),
             sale.getClient().getCode()
-        )
+        );
     }
 }
