@@ -1,5 +1,6 @@
 package com.store.sales_api.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
+import com.store.sales_api.dto.SaleSumCountDTO;
 import com.store.sales_api.service.ISaleService;
 
 import jakarta.validation.Valid;
@@ -57,6 +59,11 @@ public class SaleController {
     public ResponseEntity<Void> deleteSale(@PathVariable String saleCode) {
         saleService.deleteSale(saleCode);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/sum-count/{date}")
+    public ResponseEntity<SaleSumCountDTO> getDaySalesSumCount(@PathVariable LocalDate date) {
+        return ResponseEntity.status(HttpStatus.OK).body(saleService.getDaySaleSumCount(date));
     }
 
 }
