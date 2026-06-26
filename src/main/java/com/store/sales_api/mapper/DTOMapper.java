@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.store.sales_api.dto.ClientResponseDTO;
 import com.store.sales_api.dto.DetailResponseDTO;
+import com.store.sales_api.dto.ProductCategoryDTO;
 import com.store.sales_api.dto.ProductResponseDTO;
 import com.store.sales_api.dto.SaleMajorAmountDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
@@ -92,5 +93,11 @@ public class DTOMapper {
             sale.getClient().getLastName(),
             sale.getClient().getCode()
         );
+    }
+
+    public ProductCategoryDTO categoryToDTO(String categoryCode, String categoryLabel) {
+        if (categoryCode == null || categoryLabel == null) return null;
+
+        return new ProductCategoryDTO(categoryCode, categoryLabel);
     }
 }
