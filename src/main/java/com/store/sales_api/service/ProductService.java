@@ -1,15 +1,19 @@
 package com.store.sales_api.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.store.sales_api.dto.ProductCategoryDTO;
 import com.store.sales_api.dto.ProductRequestDTO;
 import com.store.sales_api.dto.ProductResponseDTO;
 import com.store.sales_api.exception.ResourceNotFoundException;
 import com.store.sales_api.mapper.DTOMapper;
 import com.store.sales_api.model.Product;
+import com.store.sales_api.model.ProductCategory;
 import com.store.sales_api.repository.IProductRepository;
 import com.store.sales_api.util.ProductCodeGenerator;
 
@@ -89,5 +93,15 @@ public class ProductService implements IProductService{
 
         return lowStockProducts.stream().map(product -> dtoMapper.productToDTO(product)).toList();
     }
+
+
+
+    @Override
+    public List<ProductCategoryDTO> getCategoryProducts() {
+        ProductCategory[] categories = ProductCategory.values();
+
+        return Arrays.stream(categories).map(category -> new ProductCategoryDTO(category.name(), category.getEsp())).toList();
+    }
+    
 
 }
