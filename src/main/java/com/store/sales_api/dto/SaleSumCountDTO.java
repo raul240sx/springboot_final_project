@@ -1,0 +1,12 @@
+package com.store.sales_api.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public record SaleSumCountDTO(
+    LocalDate date,
+    Integer saleCount,
+    BigDecimal dayTotalAmount
+) {
+
+}
