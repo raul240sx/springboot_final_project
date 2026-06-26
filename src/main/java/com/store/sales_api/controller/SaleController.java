@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.store.sales_api.dto.SaleMajorAmountDTO;
 import com.store.sales_api.dto.SaleRequestDTO;
 import com.store.sales_api.dto.SaleResponseDTO;
 import com.store.sales_api.dto.SaleSumCountDTO;
@@ -64,6 +65,11 @@ public class SaleController {
     @GetMapping("/sum-count/{date}")
     public ResponseEntity<SaleSumCountDTO> getDaySalesSumCount(@PathVariable LocalDate date) {
         return ResponseEntity.status(HttpStatus.OK).body(saleService.getDaySaleSumCount(date));
+    }
+
+    @GetMapping("/best-sale")
+    public ResponseEntity<SaleMajorAmountDTO> getBestSale() {
+        return ResponseEntity.status(HttpStatus.OK).body(saleService.getBestSale());
     }
 
 }
