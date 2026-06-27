@@ -1,0 +1,734 @@
+{
+  "info": {
+    "_postman_id": "0ba5b3d8-18c0-4272-9835-58510a3d194c",
+    "name": "Sales Management Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49926125",
+    "_collection_link": "https://go.postman.co/collection/49926125-0ba5b3d8-18c0-4272-9835-58510a3d194c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "Traer Categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/products/get-categories",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products",
+                "get-categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Producto 1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Cuaderno 100 hojas\",\r\n    \"brand\":\"Torre\",\r\n    \"category\":\"BOOKSHOP\",\r\n    \"price\":5200.00,\r\n    \"stock\":50\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Producto 2",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Arroz 1Kg\",\r\n    \"brand\":\"Tucapel\",\r\n    \"category\":\"GROCERIES\",\r\n    \"price\":2990.00,\r\n    \"stock\":15\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Producto 3",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Repisa de pared 20x15cm\",\r\n    \"brand\":\"MiCasa\",\r\n    \"category\":\"HOME\",\r\n    \"price\":10990.00,\r\n    \"stock\":4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Product",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Producto",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Kit Sofá\",\r\n    \"brand\":\"Cannon\",\r\n    \"category\":\"HOME\",\r\n    \"price\":789990.00,\r\n    \"stock\":4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/products/TEC-00005",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products",
+                "TEC-00005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer todos los Productos",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/products",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Producto",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/products/HOM-00003",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products",
+                "HOM-00003"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar productos con stock menor al indicado",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/products/low-stock/5",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products",
+                "low-stock",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer producto",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/products/GRO-00002",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "products",
+                "GRO-00002"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Client",
+      "item": [
+        {
+          "name": "Crear Cliente 1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Juan\",\r\n    \"lastName\":\"Valenzuela\",\r\n    \"dni\":\"112345674\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/clients",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear cliente 2",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Pedro\",\r\n    \"lastName\":\"Sanchez\",\r\n    \"dni\":\"456789123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/clients",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear cliente 3",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Miguel\",\r\n    \"lastName\":\"Molina\",\r\n    \"dni\":\"456789123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/clients",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer todos los clientes",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Chicuelito\",\r\n    \"lastName\":\"Ramirez\",\r\n    \"dni\":\"456789123\"\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/clients",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer Cliente",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Celular 64Gb\",\r\n    \"brand\":\"Samsung\",\r\n    \"category\":\"TECHNOLOGY\",\r\n    \"price\":399350.00,\r\n    \"stock\":3\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/clients/CLI-000002",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients",
+                "CLI-000002"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar cliente",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"CLI-000002\",\r\n    \"name\": \"José\",\r\n    \"lastName\": \"Cardenas\",\r\n    \"dni\": \"11111111\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/clients/CLI-000002",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients",
+                "CLI-000002"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Cliente",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Chicuelito\",\r\n    \"lastName\":\"Ramirez\",\r\n    \"dni\":\"456789123\"\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/clients/CLI-000005",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "clients",
+                "CLI-000005"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sale",
+      "item": [
+        {
+          "name": "Crear Venta 1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000003\",\r\n    \"details\":[\r\n        {\"productCode\":\"BOO-00001\", \"quantity\":3},\r\n        {\"productCode\":\"GRO-00002\", \"quantity\":2}\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/sales",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar venta",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000003\",\r\n    \"details\":[\r\n        {\"productCode\":\"TEC-00004\", \"quantity\":1},\r\n        {\"productCode\":\"HOM-00005\", \"quantity\":1}\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/sales/202606260001",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales",
+                "202606260001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer todas las ventas",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/sales",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear venta 2",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000003\",\r\n    \"details\":[\r\n        {\"productCode\":\"BOO-00001\", \"quantity\":5},\r\n        {\"productCode\":\"GRO-00002\", \"quantity\":3}\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/sales",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear venta 3",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000002\",\r\n    \"details\":[\r\n        {\"productCode\":\"TEC-00004\", \"quantity\":2},\r\n        {\"productCode\":\"HOM-00005\", \"quantity\":1}\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/sales",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Venta",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000002\",\r\n    \"details\":[\r\n        {\"productCode\":\"TEC-00004\", \"quantity\":2},\r\n        {\"productCode\":\"HOM-00005\", \"quantity\":1}\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/sales/202606260004",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales",
+                "202606260004"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer conteo de ventas y total del día",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000002\",\r\n    \"details\":[\r\n        {\"productCode\":\"TEC-00004\", \"quantity\":2},\r\n        {\"productCode\":\"HOM-00005\", \"quantity\":1}\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/sales/sum-count/2026-06-26",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales",
+                "sum-count",
+                "2026-06-26"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Traer mejor venta",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"clientCode\":\"CLI-000002\",\r\n    \"details\":[\r\n        {\"productCode\":\"TEC-00004\", \"quantity\":2},\r\n        {\"productCode\":\"HOM-00005\", \"quantity\":1}\r\n    ]\r\n}"
+            },
+            "url": {
+              "raw": "localhost:8080/sales/best-sale",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sales",
+                "best-sale"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
