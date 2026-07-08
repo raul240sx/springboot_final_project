@@ -1,0 +1,18 @@
+package com.store.sales_api.sale.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+
+public record DetailRequestDTO(
+    
+    @NotBlank(message = "{detail.product.code.null}")
+    String productCode,
+
+    @NotNull(message = "{detail.quantity.null}")
+    @Positive(message = "{detail.quantity.positive.zero}")
+    Integer quantity
+) {
+
+}
