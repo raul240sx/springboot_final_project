@@ -20,7 +20,6 @@ import com.store.sales_api.sale.dto.SaleMajorAmountDTO;
 import com.store.sales_api.sale.dto.SaleRequestDTO;
 import com.store.sales_api.sale.dto.SaleResponseDTO;
 import com.store.sales_api.sale.dto.SaleSumCountDTO;
-import com.store.sales_api.util.SaleCodeGenerator;
 
 
 @Service
