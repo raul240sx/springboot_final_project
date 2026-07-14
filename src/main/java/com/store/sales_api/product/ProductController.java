@@ -21,7 +21,7 @@ import jakarta.validation.Valid;
 
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/api/products")
 public class ProductController {
     private IProductService productService;
 
