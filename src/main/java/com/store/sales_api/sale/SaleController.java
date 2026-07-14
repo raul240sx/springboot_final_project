@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 
 @Controller
-@RequestMapping("/sales")
+@RequestMapping("/api/sales")
 public class SaleController {
     private final ISaleService saleService;
 
