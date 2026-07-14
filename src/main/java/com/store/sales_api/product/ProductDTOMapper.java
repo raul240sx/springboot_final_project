@@ -1,9 +1,18 @@
 package com.store.sales_api.product;
 
+import org.springframework.stereotype.Component;
+
 import com.store.sales_api.product.dto.ProductCategoryDTO;
 import com.store.sales_api.product.dto.ProductResponseDTO;
 
+
+@Component
 public class ProductDTOMapper {
+
+    public ProductDTOMapper() {
+    }
+
+    
 
     public ProductCategoryDTO categoryToDTO(String categoryCode, String categoryLabel) {
         if (categoryCode == null || categoryLabel == null) return null;
