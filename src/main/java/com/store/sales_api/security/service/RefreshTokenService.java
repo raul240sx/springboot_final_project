@@ -26,8 +26,8 @@ public class RefreshTokenService implements IRefreshTokenService{
     private final TokenEncrypt tokenEncrypt;
     private final SecurityDTOMapper dtoMapper;
 
-    @Value("${app.security.jwt.refresh-expiration-days}")
-    private Long refreshExpirationDays;
+    @Value("${app.security.jwt.refresh-token-expiration-seconds}")
+    private Long refreshExpiration;
 
 
     public RefreshTokenService(IRefreshTokenRepository refreshTokenRepository, IVendorRepository vendorRepository, TokenEncrypt tokenEncrypt, SecurityDTOMapper dtoMapper) {
@@ -44,7 +44,7 @@ public class RefreshTokenService implements IRefreshTokenService{
     public RefreshTokenResponseDTO createRefreshToken(String vendorCode) {
         Vendor vendor = vendorRepository.findByCode(vendorCode).orElseThrow(() -> new ResourceNotFoundException("El vendedor seleccionado no ha sido encontrado en los registros"));
         String rawToken = UUID.randomUUID().toString();
-        Instant refreshExpiricyDate = Instant.now().plus(refreshExpirationDays, ChronoUnit.DAYS);
+        Instant refreshExpiricyDate = Instant.now().plus(refreshExpiration, ChronoUnit.DAYS);
         String encryptedToken = tokenEncrypt.hashToken(rawToken);
 
         RefreshToken createdRefreshToken = refreshTokenRepository.save(new RefreshToken(encryptedToken, vendor, refreshExpiricyDate));
