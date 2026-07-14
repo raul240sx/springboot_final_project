@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 
 
 @Controller
-@RequestMapping("/clients")
+@RequestMapping("/api/clients")
 public class ClientController {
     private final IClientService clientService;
 
