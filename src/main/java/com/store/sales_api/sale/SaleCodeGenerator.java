@@ -1,4 +1,4 @@
-package com.store.sales_api.util;
+package com.store.sales_api.sale;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
