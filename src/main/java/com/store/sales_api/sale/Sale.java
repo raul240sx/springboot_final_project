@@ -9,7 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.store.sales_api.client.Client;
-import com.store.sales_api.model.Vendor;
+import com.store.sales_api.security.Vendor;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
