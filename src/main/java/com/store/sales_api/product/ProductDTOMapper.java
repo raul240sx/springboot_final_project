@@ -9,10 +9,6 @@ import com.store.sales_api.product.dto.ProductResponseDTO;
 @Component
 public class ProductDTOMapper {
 
-    public ProductDTOMapper() {
-    }
-
-    
 
     public ProductCategoryDTO categoryToDTO(String categoryCode, String categoryLabel) {
         if (categoryCode == null || categoryLabel == null) return null;
