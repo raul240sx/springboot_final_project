@@ -41,7 +41,7 @@ public class AuthService implements IAuthService{
     private Long refreshTokenExpiration;
 
     @Value("${app.security.jwt.access-token-expiration-seconds}")
-    private Long accessTokenExpirationDays;
+    private Long accessTokenExpiration;
 
 
     public AuthService(AuthenticationManager authenticationManager, JwtEncoder jwtEncoder, IRefreshTokenService refreshTokenService, CustomVendorDetailService detailService) {
@@ -64,7 +64,7 @@ public class AuthService implements IAuthService{
                                 .issuer("sales-api")
                                 .subject(authentication.getName())
                                 .issuedAt(Instant.now())
-                                .expiresAt(Instant.now().plus(this.accessTokenExpirationDays, ChronoUnit.MINUTES))
+                                .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.MINUTES))
                                 .claim("scope", roles)
                                 .build();
 
@@ -77,7 +77,7 @@ public class AuthService implements IAuthService{
                                     .httpOnly(true)
                                     .secure(true)
                                     .sameSite(this.cookieSameSite)
-                                    .maxAge(this.accessTokenExpirationDays)
+                                    .maxAge(this.accessTokenExpiration)
                                     .path("/")
                                     .build();
 
@@ -111,7 +111,7 @@ public class AuthService implements IAuthService{
                                     .issuer("sales-api")
                                     .subject(userDetails.getUsername())
                                     .issuedAt(Instant.now())
-                                    .expiresAt(Instant.now().plus(this.accessTokenExpirationDays, ChronoUnit.MINUTES))
+                                    .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.MINUTES))
                                     .claim("scope", roles)
                                     .build();
 
@@ -123,7 +123,7 @@ public class AuthService implements IAuthService{
                                             .httpOnly(true)
                                             .secure(true)
                                             .sameSite(this.cookieSameSite)
-                                            .maxAge(accessTokenExpirationDays)
+                                            .maxAge(accessTokenExpiration)
                                             .path("/")
                                             .build();
 
