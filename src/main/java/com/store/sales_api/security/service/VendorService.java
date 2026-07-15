@@ -51,7 +51,7 @@ public class VendorService implements IVendorService{
         Vendor createdVendor = vendorRepository.save(newVendor);
 
         createdVendor.setCode(codeGenerator.vendorCodeGenertator(createdVendor.getId()));
-        VendorRole role = new VendorRole(createdVendor, roleService.findRole(2L));
+        VendorRole role = new VendorRole(createdVendor, roleService.findRole(1L));
 
         createdVendor.addRole(role);
 
