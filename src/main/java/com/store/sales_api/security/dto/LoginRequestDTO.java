@@ -7,6 +7,6 @@ public record LoginRequestDTO(
     @NotBlank(message = "{login.username.blank}")
     String username,
 
-    @NotBlank(message = "login.password.blank")
+    @NotBlank(message = "{login.password.blank}")
     String password) {
 }
