@@ -44,7 +44,7 @@ public class RefreshTokenService implements IRefreshTokenService{
     public RefreshTokenResponseDTO createRefreshToken(String vendorCode) {
         Vendor vendor = vendorRepository.findByCode(vendorCode).orElseThrow(() -> new ResourceNotFoundException("El vendedor seleccionado no ha sido encontrado en los registros"));
         String rawToken = UUID.randomUUID().toString();
-        Instant refreshExpiricyDate = Instant.now().plus(refreshExpiration, ChronoUnit.DAYS);
+        Instant refreshExpiricyDate = Instant.now().plus(refreshExpiration, ChronoUnit.SECONDS);
         String encryptedToken = tokenEncrypt.hashToken(rawToken);
 
         RefreshToken createdRefreshToken = refreshTokenRepository.save(new RefreshToken(encryptedToken, vendor, refreshExpiricyDate));
