@@ -1,180 +1,153 @@
 # Sales API
 
-API REST desarrollada con Spring Boot y Java para gestionar productos, clientes y ventas de un bazar, diseñada para servir tanto a una aplicación web como a una futura app móvil.
+API REST desarrollada con Spring Boot y Java para gestionar productos, clientes, ventas, usuarios y roles de un bazar. El proyecto combina una arquitectura en capas con DTOs, validaciones, manejo de excepciones, Flyway, MySQL, soft delete y autenticación JWT con Spring Security.
 
 ## Descripción general
 
-Este proyecto implementa un backend robusto y escalable para administrar el catálogo de productos, los clientes del negocio y las ventas realizadas. La API está orientada a un uso real en producción, con validaciones, manejo de excepciones, respuestas estándar, persistencia con MySQL, migraciones automáticas con Flyway y un modelo de borrado lógico mediante soft delete.
-
-La solución sigue una arquitectura en capas y utiliza DTOs para separar la lógica de negocio de la representación de datos expuesta a los clientes HTTP.
+Esta API está orientada a un entorno realista de negocio, con endpoints RESTful bajo el prefijo /api, respuestas HTTP explícitas mediante ResponseEntity, códigos de negocio para los recursos principales y una capa de seguridad basada en tokens JWT almacenados en cookies HTTP-only.
 
 ## Objetivo del proyecto
 
-El objetivo principal es facilitar la gestión operativa del bazar permitiendo:
+Facilitar la operación del bazar permitiendo:
 
 - Registrar, consultar, actualizar y eliminar productos.
 - Registrar, consultar, actualizar y eliminar clientes.
 - Registrar, consultar, actualizar y eliminar ventas.
-- Consultar productos con bajo stock.
+- Consultar productos con stock bajo.
 - Obtener reportes de ventas por fecha y la venta de mayor monto.
-- Exponer una API REST clara, segura y preparada para integración con frontend y mobile.
+- Autenticar usuarios y proteger los recursos con roles.
 
 ## Funcionalidades implementadas
 
 ### 1. Gestión de productos
 
-Se implementa un CRUD completo para productos con los siguientes endpoints:
+Endpoints disponibles:
 
-- GET /products: lista todos los productos.
-- GET /products/{productCode}: obtiene un producto por su código.
-- POST /products: crea un nuevo producto.
-- PUT /products/{productCode}: actualiza un producto existente.
-- DELETE /products/{productCode}: elimina lógicamente un producto.
-
-Además, se incluyen funciones adicionales:
-
-- GET /products/low-stock/{lessThanStock}: obtiene productos con stock menor al valor indicado.
-- GET /products/get-categories: expone las categorías disponibles para que el frontend pueda construir formularios y filtros de forma consistente.
+- GET /api/products
+- GET /api/products/{productCode}
+- POST /api/products
+- PUT /api/products/{productCode}
+- DELETE /api/products/{productCode}
+- GET /api/products/low-stock/{lessThanStock}
+- GET /api/products/get-categories
 
 ### 2. Gestión de clientes
 
-Se implementa un CRUD completo para clientes con los siguientes endpoints:
+Endpoints disponibles:
 
-- GET /clients: lista todos los clientes.
-- GET /clients/{clientCode}: obtiene un cliente por su código.
-- POST /clients: crea un nuevo cliente.
-- PUT /clients/{clientCode}: actualiza un cliente existente.
-- DELETE /clients/{clientCode}: elimina lógicamente un cliente.
+- GET /api/clients
+- GET /api/clients/{clientCode}
+- POST /api/clients
+- PUT /api/clients/{clientCode}
+- DELETE /api/clients/{clientCode}
 
 ### 3. Gestión de ventas
 
-Se implementa un CRUD completo para ventas con los siguientes endpoints:
+Endpoints disponibles:
 
-- GET /sales: lista todas las ventas registradas.
-- GET /sales/{saleCode}: obtiene una venta por su código.
-- POST /sales: crea una nueva venta con sus detalles asociados.
-- PUT /sales/{saleCode}: actualiza una venta existente.
-- DELETE /sales/{saleCode}: elimina lógicamente una venta.
+- GET /api/sales
+- GET /api/sales/{saleCode}
+- POST /api/sales
+- PUT /api/sales/{saleCode}
+- DELETE /api/sales/{saleCode}
+- GET /api/sales/sum-count/{date}
+- GET /api/sales/best-sale
 
-Además, se incluyen consultas agregadas:
+### 4. Seguridad con Spring Security
 
-- GET /sales/sum-count/{date}: obtiene la cantidad total de ventas y la sumatoria del monto de un día específico.
-- GET /sales/best-sale: obtiene la venta con mayor monto, junto con la cantidad de productos, el cliente y su código.
+La aplicación incorpora autenticación y autorización basada en JWT:
+
+- POST /api/auth/login: autentica un usuario y devuelve cookies AUTH-TOKEN y REFRESH-TOKEN.
+- POST /api/auth/refresh: renueva los tokens a partir del refresh token almacenado en cookie.
+- POST /api/auth/logout: invalida la sesión y limpia las cookies.
+- GET /api/vendor y /api/role: protegidos para usuarios con rol ADMIN.
+- PUT /api/vendor/change-password/{vendorCode}: permite al propio usuario cambiar su contraseña.
+
+Roles implementados:
+
+- ROLE_ADMIN
+- ROLE_VENDOR
+
+## Seguridad implementada
+
+El módulo de seguridad usa Spring Security con OAuth2 Resource Server y JWT firmado con RSA.
+
+Aspectos principales:
+
+- Autenticación con username/password mediante AuthenticationManager.
+- Generación de access token y refresh token.
+- Tokens JWT firmados con RS256.
+- Cookies HTTP-only para AUTH-TOKEN y REFRESH-TOKEN.
+- Configuración de CORS y URLs públicas desde application.properties.
+- Protección por roles con @PreAuthorize.
+- Inicialización automática de un usuario administrador inicial desde variables de entorno.
+
+### URLs públicas
+
+Las rutas públicas incluyen:
+
+- /api/auth/login
+- /api/auth/refresh
+- /
+- /index.html
+- /css/**
+
+## Contratos de entrada y salida
+
+La API trabaja con DTOs para separar la capa de transporte del dominio:
+
+- ProductRequestDTO / ProductResponseDTO
+- ClientRequestDTO / ClientResponseDTO
+- SaleRequestDTO / SaleResponseDTO
+- SaleSumCountDTO
+- SaleMajorAmountDTO
+- VendorRequestDTO / VendorResponseDTO
+- LoginRequestDTO
 
 ## Diseño y buenas prácticas aplicadas
 
-### Códigos de negocio en lugar de IDs
-
-La API expone códigos generados para los recursos principales en lugar de utilizar IDs como identificadores visibles o seguros. Esto mejora la privacidad y la claridad de la integración:
-
-- Productos: códigos tipo PRO-00001.
-- Clientes: códigos tipo CLI-00001.
-- Ventas: códigos tipo YYYYMMDD0001.
-
-### Generación automática de códigos
-
-Se utilizan clases especializadas para generar códigos de producto, cliente y venta, manteniendo una lógica consistente y reutilizable.
-
-### Persistencia y migraciones
-
-El proyecto usa Flyway con el archivo de creación de tablas en:
-
-- src/main/resources/db/migration/V1__init.sql
-
-Esto permite crear la estructura base de la base de datos de forma controlada y reproducible.
-
-### Repositorios con Spring Data JPA
-
-Se utilizan repositorios con query methods y consultas personalizadas con JPQL para obtener información de forma eficiente, por ejemplo:
-
-- Búsquedas por código.
-- Consultas de stock bajo.
-- Sumatoria y conteo de ventas por fecha.
-- Consulta de la venta con mayor monto.
-
-### DTOs y validaciones
-
-Los controladores reciben y devuelven DTOs, evitando exponer directamente entidades JPA. Además, se aplican validaciones sobre los datos de entrada con mensajes personalizados.
-
-### Manejo de excepciones
-
-El proyecto implementa excepciones personalizadas y un manejador global de excepciones utilizando ProblemDetail, lo que permite responder con errores estándar y consistentes en toda la API.
-
-### Soft delete
-
-Se implementa borrado lógico mediante las anotaciones SQLDelete y SQLRestriction en las entidades. Esto evita la eliminación física de registros y modifica la forma en que se filtran los resultados en las consultas.
-
-### Respuestas HTTP consistentes
-
-Todos los controladores utilizan ResponseEntity para devolver respuestas HTTP claras y semánticas, incluyendo estados como OK, CREATED y NO CONTENT.
+- Códigos de negocio en lugar de IDs visibles para productos, clientes y ventas.
+- Validaciones de entrada con mensajes personalizados.
+- Manejo global de excepciones con ProblemDetail.
+- Soft delete con SQLDelete y SQLRestriction.
+- Migraciones automáticas con Flyway.
+- Repositorios con Spring Data JPA y consultas personalizadas.
+- Respuestas HTTP consistentes con ResponseEntity.
 
 ## Tecnologías utilizadas
 
 - Java 21
-- Spring Boot 4.1.0
+- Spring Boot 3.x
 - Spring Web MVC
 - Spring Data JPA
+- Spring Security
 - Spring Validation
+- OAuth2 Resource Server
 - Flyway
 - MySQL
 - Lombok
 - Maven
 - Docker Compose
 
-## Estructura del proyecto
-
-```text
-src/
-  main/
-    java/
-      com/store/sales_api/
-        controller/
-        dto/
-        exception/
-        mapper/
-        model/
-        repository/
-        service/
-        util/
-    resources/
-      application.properties
-      ValidationMessages.properties
-      db/migration/V1__init.sql
-```
-
-## Cómo replicar el proyecto
+## Cómo ejecutar el proyecto
 
 ### Requisitos previos
 
 - Java 21
 - Maven
 - Docker y Docker Compose
-- MySQL (o usar Docker Compose para levantarla)
+- MySQL o Docker Compose para levantar la base de datos
 
-### Opción 1: Ejecutar con Docker Compose
+### Opción 1: Docker Compose
 
-1. Clona el repositorio.
-2. Crea un archivo .env en la raíz con las variables de entorno necesarias, por ejemplo:
-
-```env
-DB_NAME=sales_db
-DB_USER=sales_user
-DB_PASS=sales_password
-DB_ROOT_PASS=root_password
-DB_URL=jdbc:mysql://sales-db:3306/sales_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-```
-
-3. Ejecuta:
+1. Crear un archivo .env en la raíz del proyecto con las variables de entorno necesarias.
+2. Ejecutar:
 
 ```bash
 docker compose up --build
 ```
 
-### Opción 2: Ejecutar localmente
-
-1. Asegúrate de tener una base de datos MySQL en ejecución.
-2. Ajusta las credenciales en application.properties o mediante variables de entorno.
-3. Ejecuta:
+### Opción 2: Ejecución local
 
 ```bash
 ./mvnw spring-boot:run
@@ -183,13 +156,6 @@ docker compose up --build
 La API quedará disponible en:
 
 - http://localhost:8080
-
-## Flujo de negocio propuesto
-
-1. Se registran productos y clientes.
-2. Se crean ventas asociando un cliente y uno o más detalles de productos.
-3. La aplicación calcula los importes y almacena la información en base de datos.
-4. Se pueden consultar reportes y estados del stock para apoyar la operación del bazar.
 
 ## Autoría
 
