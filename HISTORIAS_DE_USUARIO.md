@@ -1,6 +1,6 @@
 # Historias de usuario del proyecto Sales API
 
-Este documento recopila las historias de usuario aplicadas al proyecto, alineadas con la guía entregada y con las mejoras implementadas para adaptarlo a un escenario real de desarrollo backend.
+Este documento describe las historias de usuario del proyecto, alineadas con la implementación actual de la API y con los contratos reales definidos por los DTOs.
 
 ## Historias de usuario
 
@@ -13,8 +13,8 @@ Criterios de aceptación:
 - Se puede actualizar la información de un producto.
 - Se puede eliminar un producto sin borrar físicamente el registro.
 
-Formato esperado de los endpoints:
-- POST /products: recibe un JSON con el formato del DTO de creación de producto.
+Formato esperado del endpoint:
+- POST /api/products y PUT /api/products/{productCode}: reciben un JSON con el DTO ProductRequestDTO.
 
 ```json
 {
@@ -26,12 +26,11 @@ Formato esperado de los endpoints:
 }
 ```
 
-- PUT /products/{productCode}: usa el mismo cuerpo que el POST.
-- GET /products y GET /products/{productCode}: devuelven un JSON con la estructura del DTO de respuesta:
+- GET /api/products y GET /api/products/{productCode}: responden con un JSON basado en ProductResponseDTO.
 
 ```json
 {
-  "code": "GRO-00001",
+  "code": "PRO-00001",
   "name": "Leche Entera",
   "brand": "Sanalac",
   "category": "GROCERIES",
@@ -48,8 +47,8 @@ Criterios de aceptación:
 - Se pueden listar y buscar clientes por código.
 - Se pueden editar y eliminar clientes con control de integridad.
 
-Formato esperado de los endpoints:
-- POST /clients y PUT /clients/{clientCode}: reciben un JSON con el DTO de cliente.
+Formato esperado del endpoint:
+- POST /api/clients y PUT /api/clients/{clientCode}: reciben un JSON con el DTO ClientRequestDTO.
 
 ```json
 {
@@ -59,7 +58,7 @@ Formato esperado de los endpoints:
 }
 ```
 
-- GET /clients y GET /clients/{clientCode}: responden con un JSON como este:
+- GET /api/clients y GET /api/clients/{clientCode}: responden con un JSON basado en ClientResponseDTO.
 
 ```json
 {
@@ -76,29 +75,29 @@ Como operador de caja, quiero registrar ventas con sus productos y el cliente as
 Criterios de aceptación:
 - Se pueden registrar ventas con uno o más productos.
 - Cada venta está asociada a un cliente.
-- Se pueden consultar ventas anteriores y detalles asociados.
+- Se pueden consultar ventas anteriores y sus detalles asociados.
 - Se pueden eliminar ventas de forma lógica.
 
-Formato esperado de los endpoints:
-- POST /sales y PUT /sales/{saleCode}: reciben un JSON con la estructura del DTO de solicitud de venta.
+Formato esperado del endpoint:
+- POST /api/sales y PUT /api/sales/{saleCode}: reciben un JSON con el DTO SaleRequestDTO.
 
 ```json
 {
   "clientCode": "CLI-00001",
   "details": [
     {
-      "productCode": "GRO-00001",
+      "productCode": "PRO-00001",
       "quantity": 2
     },
     {
-      "productCode": "TEC-00002",
+      "productCode": "PRO-00002",
       "quantity": 1
     }
   ]
 }
 ```
 
-- GET /sales y GET /sales/{saleCode}: responden con un JSON como este:
+- GET /api/sales y GET /api/sales/{saleCode}: responden con un JSON basado en SaleResponseDTO.
 
 ```json
 {
@@ -108,7 +107,7 @@ Formato esperado de los endpoints:
   "clientCode": "CLI-00001",
   "details": [
     {
-      "productCode": "GRO-00001",
+      "productCode": "PRO-00001",
       "quantity": 2,
       "partialAmount": 2401.00
     }
@@ -124,12 +123,12 @@ Criterios de aceptación:
 - La consulta ayuda a la toma de decisiones de reposición.
 
 Formato esperado del endpoint:
-- GET /products/low-stock/{lessThanStock}: devuelve una lista de productos en formato de DTO de respuesta.
+- GET /api/products/low-stock/{lessThanStock}: devuelve una lista de ProductResponseDTO.
 
 ```json
 [
   {
-    "code": "GRO-00003",
+    "code": "PRO-00003",
     "name": "Arroz",
     "brand": "Dos Hermanos",
     "category": "GROCERIES",
@@ -146,7 +145,7 @@ Criterios de aceptación:
 - La API expone un endpoint que devuelve las categorías disponibles con su código y etiqueta.
 
 Formato esperado del endpoint:
-- GET /products/get-categories: devuelve un arreglo de objetos con el formato del DTO de categoría.
+- GET /api/products/get-categories: devuelve una lista de objetos con el formato del DTO de categoría.
 
 ```json
 [
@@ -165,11 +164,11 @@ Formato esperado del endpoint:
 Como responsable del negocio, quiero consultar reportes de ventas por día para conocer el volumen de operaciones y los montos acumulados.
 
 Criterios de aceptación:
-- Se puede consultar el total de ventas y la suma de montos para una fecha determinada.
+- Se puede consultar el total de ventas y la suma de montos de una fecha determinada.
 - La respuesta está estructurada de forma clara y reutilizable.
 
 Formato esperado del endpoint:
-- GET /sales/sum-count/{date}: devuelve un JSON con la estructura del DTO de resumen diario.
+- GET /api/sales/sum-count/{date}: devuelve un JSON basado en SaleSumCountDTO.
 
 ```json
 {
@@ -183,10 +182,10 @@ Formato esperado del endpoint:
 Como dueño del bazar, quiero identificar la venta con mayor monto para analizar el comportamiento del negocio.
 
 Criterios de aceptación:
-- El sistema expone la venta con mayor importe junto con información del cliente y la cantidad de productos involucrados.
+- El sistema expone la venta de mayor importe junto con información del cliente y la cantidad de productos involucrados.
 
 Formato esperado del endpoint:
-- GET /sales/best-sale: devuelve un JSON con la estructura del DTO de venta destacada.
+- GET /api/sales/best-sale: devuelve un JSON basado en SaleMajorAmountDTO.
 
 ```json
 {
@@ -199,28 +198,59 @@ Formato esperado del endpoint:
 }
 ```
 
+### HU-08: Autenticación y gestión de sesión
+Como usuario del sistema, quiero autenticarme de forma segura para acceder a los recursos protegidos y mantener una sesión administrada con tokens.
+
+Criterios de aceptación:
+- Se puede iniciar sesión mediante un usuario y contraseña válidos.
+- El sistema devuelve cookies de acceso y refresh con los tokens JWT.
+- Se puede renovar la sesión con el refresh token.
+- Se puede cerrar la sesión y limpiar las cookies.
+
+Formato esperado del endpoint:
+- POST /api/auth/login: recibe un JSON con LoginRequestDTO.
+
+```json
+{
+  "username": "admin",
+  "password": "password123"
+}
+```
+
+Respuesta esperada:
+- Headers Set-Cookie con AUTH-TOKEN y REFRESH-TOKEN, sin un cuerpo JSON de respuesta.
+
+### HU-09: Gestión de vendedores y roles
+Como administrador, quiero poder administrar vendedores y roles para controlar el acceso a la API y mantener la seguridad del sistema.
+
+Criterios de aceptación:
+- El administrador puede listar, crear, actualizar y eliminar vendedores.
+- El administrador puede asignar o remover roles a un vendedor.
+- Un vendedor puede cambiar su propia contraseña.
+
+Formato esperado del endpoint:
+- GET /api/vendor, POST /api/vendor, PUT /api/vendor/{vendorCode}, DELETE /api/vendor/{vendorCode}: reciben y devuelven VendorRequestDTO y VendorResponseDTO.
+
+```json
+{
+  "code": "VEN-00001",
+  "name": "Ana",
+  "lastName": "Gómez",
+  "dni": "40111222",
+  "roles": ["ROLE_ADMIN", "ROLE_VENDOR"]
+}
+```
+
 ## Mejoras implementadas respecto a la guía
 
-Además de cubrir los requerimientos funcionales de la guía, el proyecto incorpora varias mejoras para acercarlo a una implementación más profesional y RESTful:
+Además de cubrir los requerimientos funcionales iniciales, el proyecto incorpora mejoras para acercarlo a una implementación más profesional y realista:
 
-- Endpoints RESTful y semánticos usando recursos en plural, como /products, /clients y /sales.
-- Exposición de códigos de negocio en vez de IDs para mejorar la seguridad y la usabilidad de la API.
-- Uso de DTOs para separar la capa de transporte de las entidades del modelo.
-- Validaciones de entrada con mensajes personalizados y respuestas claras de error.
-- Manejo global de excepciones con ProblemDetail, lo que permite un estándar de error uniforme.
-- Uso de ResponseEntity en todos los controladores para devolver respuestas HTTP explícitas.
-- Implementación de soft delete con SQLDelete y SQLRestriction para conservar la trazabilidad de los datos.
-- Soporte para Flyway con un script de creación de tablas reproducible.
-- Exposición de categorías y reportes para facilitar la integración con un frontend.
-- Uso de query methods y consultas JPQL para operaciones de negocio más complejas.
-
-## Valor agregado del proyecto
-
-El proyecto no solo cumple con la guía del TP integrador, sino que además incorpora una base sólida para una API realista, preparada para continuar creciendo con nuevas funcionalidades como:
-
-- control de stock automático al registrar ventas,
-- descuentos y promociones,
-- historial de cambios,
-- autenticación y autorización,
-- paginación y filtros avanzados.
+- Endpoints RESTful bajo el prefijo /api.
+- Uso de códigos de negocio para productos, clientes y ventas.
+- DTOs para separar transporte y dominio.
+- Validaciones y manejo global de excepciones.
+- Soft delete para conservar trazabilidad.
+- Flyway para migraciones reproducibles.
+- Seguridad con Spring Security, JWT y cookies HTTP-only.
+- Roles y autorización por método con @PreAuthorize.
 
