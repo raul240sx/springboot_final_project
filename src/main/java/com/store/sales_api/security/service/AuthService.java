@@ -58,14 +58,14 @@ public class AuthService implements IAuthService{
         UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(dto.username(), dto.password());
        Authentication authentication = authenticationManager.authenticate(credentials);
 
-       String roles = String.join(", ", authentication.getAuthorities().stream().map(authority -> authority.toString()).toList());
+       String roles = String.join(" ", authentication.getAuthorities().stream().map(authority -> authority.getAuthority()).toList());
 
        JwtClaimsSet claimSet = JwtClaimsSet.builder()
                                 .issuer("sales-api")
                                 .subject(authentication.getName())
                                 .issuedAt(Instant.now())
-                                .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.MINUTES))
-                                .claim("scope", roles)
+                                .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.SECONDS))
+                                .claim("roles", roles)
                                 .build();
 
 
@@ -105,14 +105,14 @@ public class AuthService implements IAuthService{
         RefreshTokenResponseDTO newRefreshToken = refreshTokenService.createRefreshToken(token.getVendor().getCode());
 
         UserDetails userDetails = detailService.loadUserByUsername(token.getVendor().getCode());
-        String roles = String.join(", ", userDetails.getAuthorities().stream().map(authority -> authority.toString()).toList());
+        String roles = String.join(" ", userDetails.getAuthorities().stream().map(authority -> authority.toString()).toList());
 
         JwtClaimsSet claimSet = JwtClaimsSet.builder()
                                     .issuer("sales-api")
                                     .subject(userDetails.getUsername())
                                     .issuedAt(Instant.now())
-                                    .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.MINUTES))
-                                    .claim("scope", roles)
+                                    .expiresAt(Instant.now().plus(this.accessTokenExpiration, ChronoUnit.SECONDS))
+                                    .claim("roles", roles)
                                     .build();
 
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).build();
