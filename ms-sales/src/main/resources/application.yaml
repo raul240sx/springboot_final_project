@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ms-sales
+  config:
+    import: "configserver:https://ms-config-server:8021"
