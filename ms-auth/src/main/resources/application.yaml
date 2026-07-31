@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ms-auth
+  config:
+    import: "configserver:https://ms-config-server:8021"
+
+
