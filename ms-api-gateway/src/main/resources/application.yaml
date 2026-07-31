@@ -2,4 +2,4 @@ spring:
   application:
     name: ms-api-gateway
   config:
-    import: "optional:configserver:http://localhost:8021"
+    import: "configserver:https://ms-config-server:8021"
