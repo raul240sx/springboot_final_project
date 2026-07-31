@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ms-products
+  config:
+    import: "configserver:https://ms-config-server:8021"
+
