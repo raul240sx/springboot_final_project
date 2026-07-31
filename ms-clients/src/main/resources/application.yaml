@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ms-clients
+  config:
+    import: "configserver:https://ms-config-server:8021"
