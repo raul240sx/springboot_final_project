@@ -1,0 +1,10 @@
+CREATE TABLE client (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    code VARCHAR(20) UNIQUE,
+    name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    dni VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+
+    PRIMARY KEY (id)
+);
