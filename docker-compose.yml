@@ -1,0 +1,312 @@
+services:
+  cloud-db:
+    container_name: cloud-db
+    image: mysql:latest
+    ports:
+      - 4455:3306
+    restart: unless-stopped
+    environment:
+
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+    volumes:
+      - db_spring_cloud:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASS}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ms-registry-server:
+    container_name: ms-registry-server
+    build: ./ms-registry-server
+    ports:
+      - "9020:9020"
+    restart: unless-stopped
+    environment:
+      KEYSTORE_LOCATION: ${REGISTRY_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${REGISTRY_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${REGISTRY_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${REGISTRY_TRUSTSTORE_PASSWORD}
+    volumes:
+      - ./secret/Services-Certs/registry-server-keystore.p12:/certs/registry-server-keystore.p12:ro
+      - ./secret/CA-Certs/truststore.p12:/certs/truststore.p12:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9020/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  ms-config-server:
+    container_name: ms-config-server
+    build: ./ms-config-server
+    ports:
+      - "9021:9021"
+    restart: unless-stopped
+    depends_on:
+      ms-registry-server:
+        condition: service_healthy
+
+    environment:
+      KEYSTORE_LOCATION: ${CONFIG_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${CONFIG_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${CONFIG_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${CONFIG_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${CONFIG_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${CONFIG_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${CONFIG_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${CONFIG_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/Services-Certs/config-server-keystore.p12:${CONFIG_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${CONFIG_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9021/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  ms-auth:
+    container_name: ms-auth
+    build: ./ms-auth
+    restart: unless-stopped
+    ports:
+      - "9023:9023"
+    depends_on:
+      cloud-db:
+        condition: service_healthy
+      ms-registry-server:
+        condition: service_healthy
+      ms-config-server:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL_AUTH}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      JWT_PUBLIC_KEY_LOCATION: ${JWT_PUBLIC_KEY_LOCATION}
+      JWT_PRIVATE_KEY_LOCATION: ${JWT_PRIVATE_KEY_LOCATION}
+      FIRST_USER_CODE: ${FIRST_USER_CODE}
+      FIRST_USER_NAME: ${FIRST_USER_NAME}
+      FIRST_USER_LAST_NAME: ${FIRST_USER_LAST_NAME}
+      FIRST_USER_DNI: ${FIRST_USER_DNI}
+      FIRST_USER_PASSWORD: ${FIRST_USER_PASSWORD}
+      KEYSTORE_LOCATION: ${AUTH_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${AUTH_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${AUTH_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${AUTH_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${AUTH_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${AUTH_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${AUTH_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${AUTH_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/JWT-Keys:/app/secret:ro
+      - ./secret/Services-Certs/auth-keystore.p12:${AUTH_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${AUTH_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9023/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+
+  ms-products:
+    container_name: ms-products
+    build: ./ms-products
+    restart: unless-stopped
+    ports:
+      - "9024:9024"
+    depends_on:
+      cloud-db:
+        condition: service_healthy
+      ms-registry-server:
+        condition: service_healthy
+      ms-config-server:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL_PRODUCTS}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      JWT_PUBLIC_KEY_LOCATION: ${JWT_PUBLIC_KEY_LOCATION}
+      KEYSTORE_LOCATION: ${PRODUCTS_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${PRODUCTS_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${PRODUCTS_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${PRODUCTS_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${PRODUCTS_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${PRODUCTS_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${PRODUCTS_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${PRODUCTS_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/JWT-Keys/public.pem:/app/secret/public.pem:ro
+      - ./secret/Services-Certs/products-keystore.p12:${PRODUCTS_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${PRODUCTS_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9024/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    
+  ms-sales:
+    container_name: ms-sales
+    build: ./ms-sales
+    restart: unless-stopped
+    ports:
+      - "9025:9025"
+    depends_on:
+      cloud-db:
+        condition: service_healthy
+      ms-registry-server:
+        condition: service_healthy
+      ms-config-server:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL_SALES}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      JWT_PUBLIC_KEY_LOCATION: ${JWT_PUBLIC_KEY_LOCATION}
+      KEYSTORE_LOCATION: ${SALES_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${SALES_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${SALES_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${SALES_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${SALES_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${SALES_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${SALES_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${SALES_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/JWT-Keys/public.pem:/app/secret/public.pem:ro
+      - ./secret/Services-Certs/sales-keystore.p12:${SALES_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${SALES_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9025/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  ms-clients:
+    container_name: ms-clients
+    build: ./ms-clients
+    restart: unless-stopped
+    ports:
+      - "9026:9026"
+    depends_on:
+      cloud-db:
+        condition: service_healthy
+      ms-registry-server:
+        condition: service_healthy
+      ms-config-server:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL_CLIENTS}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      JWT_PUBLIC_KEY_LOCATION: ${JWT_PUBLIC_KEY_LOCATION}
+      KEYSTORE_LOCATION: ${CLIENTS_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${CLIENTS_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${CLIENTS_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${CLIENTS_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${CLIENTS_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${CLIENTS_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${CLIENTS_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${CLIENTS_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/JWT-Keys/public.pem:/app/secret/public.pem:ro
+      - ./secret/Services-Certs/clients-keystore.p12:${CLIENTS_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${CLIENTS_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9026/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+
+  ms-api-gateway:
+    build: ./ms-api-gateway
+    container_name: ms-api-gateway
+    ports:
+      - "9022:9022"
+    restart: unless-stopped
+    depends_on:
+      ms-registry-server:
+        condition: service_healthy
+      ms-config-server:
+        condition: service_healthy
+    
+    environment:
+      KEYSTORE_LOCATION: ${GATEWAY_KEYSTORE_LOCATION} 
+      KEYSTORE_PASSWORD: ${GATEWAY_KEYSTORE_PASSWORD}
+      TRUSTSTORE_LOCATION: ${GATEWAY_TRUSTSTORE_LOCATION}
+      TRUSTSTORE_PASSWORD: ${GATEWAY_TRUSTSTORE_PASSWORD}
+      JAVA_TOOL_OPTIONS: >-
+          -Djavax.net.ssl.keyStore=${GATEWAY_KEYSTORE_LOCATION}
+          -Djavax.net.ssl.keyStorePassword=${GATEWAY_KEYSTORE_PASSWORD}
+          -Djavax.net.ssl.keyStoreType=PKCS12
+          -Djavax.net.ssl.trustStore=${GATEWAY_TRUSTSTORE_LOCATION}
+          -Djavax.net.ssl.trustStorePassword=${GATEWAY_TRUSTSTORE_PASSWORD}
+          -Djavax.net.ssl.trustStoreType=PKCS12
+    volumes:
+      - ./secret/Services-Certs/api-gateway-keystore.p12:${GATEWAY_KEYSTORE_LOCATION}:ro
+      - ./secret/CA-Certs/truststore.p12:${GATEWAY_TRUSTSTORE_LOCATION}:ro
+    networks:
+      - store_cloud_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9022/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  cloudflared-sales-spring:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-cloud
+    restart: unless-stopped
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    command: tunnel --no-autoupdate run
+    depends_on:
+      ms-api-gateway:
+        condition: service_healthy
+    networks:
+      - store_cloud_network
+    
+
+networks:
+  store_cloud_network:
+    driver: bridge
+
+volumes:
+  db_spring_cloud:
