@@ -1,0 +1,31 @@
+CREATE TABLE sale (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    code VARCHAR(50) UNIQUE,
+    date DATE NOT NULL,
+    total_amount DECIMAL(19, 2) NOT NULL DEFAULT 0.00,
+    vendor_code VARCHAR(50) NOT NULL,
+    client_code VARCHAR(50) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+
+    PRIMARY KEY (id),
+    CONSTRAINT chk_total_amount_positive CHECK (total_amount >= 0),
+
+    INDEX idx_sale_client_code (client_code)
+);
+
+
+CREATE TABLE detail (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    sale_id BIGINT NOT NULL,
+    product_code VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    partial_amount DECIMAL(19, 2) NOT NULL DEFAULT 0.00,
+
+    PRIMARY KEY (id),
+    CONSTRAINT fk_detail_sale FOREIGN KEY (sale_id) REFERENCES sale(id),
+    CONSTRAINT chk_partial_amount_positive CHECK (partial_amount >= 0),
+    CONSTRAINT chk_quantity_positive CHECK (quantity > 0),
+
+    INDEX idx_detail_sale_id (sale_id),
+    INDEX idx_detail_product_code (product_code)
+);
