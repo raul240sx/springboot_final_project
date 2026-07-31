@@ -1,0 +1,84 @@
+server:
+  port: 8023
+  ssl:
+    enabled: true
+    key-store: file:${KEYSTORE_LOCATION}
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+    key-password: ${KEYSTORE_PASSWORD}
+    trust-store: file:${TRUSTSTORE_LOCATION}
+    trust-store-password: ${TRUSTSTORE_PASSWORD}
+    trust-store-type: PKCS12
+    client-auth: need
+
+management:
+  server:
+    port: 9023
+    ssl:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: ms-auth
+    secure-port-enabled: true
+    secure-port: 8023
+    non-secure-port-enabled: false
+  client:
+    tls:
+      enabled: true
+      key-store: file:${KEYSTORE_LOCATION}
+      key-store-type: PKCS12
+      key-store-password: ${KEYSTORE_PASSWORD}
+      key-password: ${KEYSTORE_PASSWORD}
+      trust-store: file:${TRUSTSTORE_LOCATION}
+      trust-store-type: PKCS12
+      trust-store-password: ${TRUSTSTORE_PASSWORD}
+    serviceUrl:
+      defaultZone: https://ms-registry-server:8020/eureka/
+
+
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: file:${JWT_PUBLIC_KEY_LOCATION}
+          private-key-location: file:${JWT_PRIVATE_KEY_LOCATION}
+
+##Expiracion JWT
+app:
+  security:
+    jwt:
+      refresh-token-expiration-seconds: 604800
+      access-token-expiration-seconds: 900
+    cookie:
+      same-site: None
+    public-urls: /api/auth/login,/api/auth/refresh,/api/auth/logout,/,/index.html,/css/**,/js/**,/images/**,/actuator/health
+  initializer:
+    first-user-code: ${FIRST_USER_CODE}
+    first-user-name: ${FIRST_USER_NAME}
+    first-user-last-name: ${FIRST_USER_LAST_NAME}
+    first-user-dni: ${FIRST_USER_DNI}
+    first-user-password: ${FIRST_USER_PASSWORD}
