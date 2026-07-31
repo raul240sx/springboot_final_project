@@ -1,3 +1,17 @@
+server:
+  port: 8021
+  ssl:
+    enabled: true
+    key-store: file:${KEYSTORE_LOCATION}
+    key-store-password: rgr321ex
+    key-store-type: PKCS12
+    key-password: rgr321ex
+    trust-store: file:${TRUSTSTORE_LOCATION}
+    trust-store-password: rgr321ex
+    trust-store-type: PKCS12
+    client-auth: need
+
+
 spring:
   application:
     name: ms-config-server
@@ -10,10 +24,40 @@ spring:
           search-locations:
           - classpath:/config/
 
-server:
-  port: 8021
+management:
+  server:
+    port: 9021
+    ssl:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+info:
+  app:
+    name: ms-config-server
+    description: Microservicio de Configuraciones
+  env:
+    enabled: true
+
 
 eureka:
+  instance:
+    prefer-ip-address: false
+    hostname: ms-config-server
   client:
+    tls:
+      enabled: true
+      key-store: file:${KEYSTORE_LOCATION}
+      key-store-type: PKCS12
+      key-store-password: ${KEYSTORE_PASSWORD}
+      key-password: ${KEYSTORE_PASSWORD}
+      trust-store: file:${TRUSTSTORE_LOCATION}
+      trust-store-type: PKCS12
+      trust-store-password: ${TRUSTSTORE_PASSWORD}
     serviceUrl:
-      defaultZone: http://localhost:8020/eureka/
+      defaultZone: https://ms-registry-server:8020/eureka/
