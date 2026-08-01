@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import rrs.ms_auth.model.RefreshToken;
 
 
 @Service
+@RefreshScope
 public class AuthService implements IAuthService{
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
