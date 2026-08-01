@@ -3,11 +3,11 @@ server:
   ssl:
     enabled: true
     key-store: file:${KEYSTORE_LOCATION}
-    key-store-password: rgr321ex
+    key-store-password: ${KEYSTORE_PASSWORD}
     key-store-type: PKCS12
-    key-password: rgr321ex
+    key-password: ${KEYSTORE_PASSWORD}
     trust-store: file:${TRUSTSTORE_LOCATION}
-    trust-store-password: rgr321ex
+    trust-store-password: ${TRUSTSTORE_PASSWORD}
     trust-store-type: PKCS12
     client-auth: need
 
@@ -16,13 +16,16 @@ spring:
   application:
     name: ms-config-server
   profiles:
-    active: native
+    active: git
   cloud:
     config:
       server:
-        native:
-          search-locations:
-          - classpath:/config/
+        git:
+          uri: ${GITHUB_CONFIGURATIONS_URL}
+          username: ${GITHUB_USER}
+          password: ${GITHUB_TOKEN}
+
+
 
 management:
   server:
@@ -32,7 +35,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health, refresh
   endpoint:
     health:
       show-details: never
