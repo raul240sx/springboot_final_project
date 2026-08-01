@@ -53,19 +53,14 @@ services:
     depends_on:
       ms-registry-server:
         condition: service_healthy
-
     environment:
+      GITHUB_CONFIGURATIONS_URL: ${GITHUB_CONFIGURATIONS_URL}
+      GITHUB_USER: ${GITHUB_USER}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
       KEYSTORE_LOCATION: ${CONFIG_KEYSTORE_LOCATION} 
       KEYSTORE_PASSWORD: ${CONFIG_KEYSTORE_PASSWORD}
       TRUSTSTORE_LOCATION: ${CONFIG_TRUSTSTORE_LOCATION}
       TRUSTSTORE_PASSWORD: ${CONFIG_TRUSTSTORE_PASSWORD}
-      JAVA_TOOL_OPTIONS: >-
-          -Djavax.net.ssl.keyStore=${CONFIG_KEYSTORE_LOCATION}
-          -Djavax.net.ssl.keyStorePassword=${CONFIG_KEYSTORE_PASSWORD}
-          -Djavax.net.ssl.keyStoreType=PKCS12
-          -Djavax.net.ssl.trustStore=${CONFIG_TRUSTSTORE_LOCATION}
-          -Djavax.net.ssl.trustStorePassword=${CONFIG_TRUSTSTORE_PASSWORD}
-          -Djavax.net.ssl.trustStoreType=PKCS12
     volumes:
       - ./secret/Services-Certs/config-server-keystore.p12:${CONFIG_KEYSTORE_LOCATION}:ro
       - ./secret/CA-Certs/truststore.p12:${CONFIG_TRUSTSTORE_LOCATION}:ro
